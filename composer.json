@@ -2,6 +2,7 @@
     "name": "ocramius/ocra-hop-hop",
     "description": "Very fast worker-based HTTP Request dispatching for ZF2 that re-uses bootstrapped applications ",
     "type": "library",
+    "license": "MIT",
     "tags": [
         "zf2",
         "worker",
