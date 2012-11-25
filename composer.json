@@ -1,0 +1,27 @@
+{
+    "name": "ocramius/ocra-hop-hop",
+    "description": "Very fast worker-based HTTP Request dispatching for ZF2 that re-uses bootstrapped applications ",
+    "type": "library",
+    "tags": [
+        "zf2",
+        "worker",
+        "module"
+    ],
+    "homepage": "https://github.com/Ocramius/OcraHopHop",
+    "authors": [
+        {
+            "name": "Marco Pivetta",
+            "email": "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.com/"
+        }
+    ],
+    "require": {
+        "react/react": "0.2.*",
+        "zendframework/zend-mvc": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "OcraHopHop\\": "src"
+        }
+    }
+}
