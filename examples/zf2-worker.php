@@ -18,21 +18,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$cfg = array(
-    'modules' => array(
-        // requires you to have the application module loaded!
-        'Application',
-    ),
-    'module_listener_options' => array(
-        'config_glob_paths' => array(
-            'config/autoload/{,*.}{global,local}.php',
-        ),
-        'module_paths' => array(
-            './module',
-            './vendor',
-        ),
-    ),
-);
+$cfg = require __DIR__ . '/../config/application.config.php';
 
 $app = new \OcraHopHop\ApplicationWorker(\Zend\Mvc\Application::init($cfg));
 $app->run();
