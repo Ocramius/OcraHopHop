@@ -18,6 +18,11 @@
 
 namespace OcraHopHop;
 
+use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\ModuleManagerInterface;
+
+use Zend\Console\Console;
+
 /**
  * OcraHopHop module
  *
@@ -26,7 +31,13 @@ namespace OcraHopHop;
  * @author  Marco Pivetta <ocramius@gmail.com>
  * @license MIT
  */
-class Module
+class Module implements InitProviderInterface
 {
-
+    /**
+     * {@inheritDoc}
+     */
+    public function init(ModuleManagerInterface $manager)
+    {
+        Console::overrideIsConsole(false);
+    }
 }

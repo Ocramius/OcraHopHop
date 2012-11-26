@@ -54,18 +54,25 @@ class Dispatcher
      */
     public function dispatch()
     {
+        $start = microtime(true);
         $originalRequest    = new EnvironmentRequest();
-        $originalRequestStr = $originalRequest->toString();
         $client             = new Client();
         $request            = new Request();
 
         $request->setMethod(\Zend\Http\Request::METHOD_GET);
         $request->setUri('http://127.0.0.1:1337');
-        $request->setContent(json_encode(array('original_request_string' => $originalRequestStr)));
+        $request->setContent(json_encode(array(
+            'original_request_string' => $originalRequest->toString(),
+            'original_base_url'       => $originalRequest->getBaseUrl(),
+            'original_base_path'      => $originalRequest->getBasePath(),
+        )));
 
-        $response = $client->dispatch($request);
+        $response             = $client->dispatch($request);
         $originalResponseData = json_decode($response->getContent(), true);
 
-        return EnvironmentResponse::fromString($originalResponseData['original_response_string']);
+        $httpResponse = EnvironmentResponse::fromString($originalResponseData['original_response_string']);
+        //die($originalResponseData['microtime'] . ' | ' . (microtime(true) - $start) . PHP_EOL);
+
+        return $httpResponse;
     }
 }

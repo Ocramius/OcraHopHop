@@ -25,7 +25,7 @@ use React\Http\Response as ReactResponse;
 use React\EventLoop\Factory as EventLoopFactory;
 use React\Socket\Server as SocketServer;
 use React\Http\Server as HttpServer;
-use Zend\Http\Request;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
 
 /**
@@ -72,7 +72,6 @@ class ApplicationWorker
             -9999
         );
 
-        $this->application->bootstrap();
         $this->port = (int) $port;
     }
 
@@ -96,28 +95,29 @@ class ApplicationWorker
         $app = function (ReactRequest $reactRequest, ReactResponse $reactResponse) use ($application) {
             $reactRequest->on('data', function ($data) use ($application, $reactResponse) {
                 $application->servedRequests += 1;
-                $data = json_decode($data, true);
 
-                $request = Request::fromString($data['original_request_string']);
+                $data     = json_decode($data, true);
+                /* @var $request Request */
+                $request  = Request::fromString($data['original_request_string']);
                 $response = new Response();
                 $mvcEvent = $application->application->getMvcEvent();
 
+                $request->setBasePath($data['original_base_path']);
+                $request->setBaseUrl($data['original_base_url']);
                 $mvcEvent->setRequest($request);
                 $mvcEvent->setResponse($response);
 
                 /* @var $response \Zend\Http\Response */
+                $runStart = microtime(true);
                 $response = $application->application->run();
-                $content = json_encode(array(
+                $content  = json_encode(array(
+                    'microtime'                => microtime(true) - $runStart,
                     'served_requests_count'    => $application->servedRequests,
                     'original_response_string' => $response->toString(),
                 ));
 
                 $reactResponse->writeHead(200, array('Content-Length' => mb_strlen($content)));
-
-                $reactResponse->end(json_encode(array(
-                    'served_requests_count'    => $application->servedRequests,
-                    'original_response_string' => $response->toString(),
-                )));
+                $reactResponse->end($content);
             });
         };
 
