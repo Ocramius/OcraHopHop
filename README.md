@@ -8,10 +8,10 @@ used by a ZF2 Application while dispatching an HTTP Request.
 The recommended way to install `ocramius/ocra-hop-hop` is through
 [composer](http://getcomposer.org/):
 
-```
+```json
 {
     "require": {
-        "ocramius/ocra-hop-hop": "*"
+        "ocramius/ocra-hop-hop": "dev-master@dev"
     }
 }
 ```
