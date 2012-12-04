@@ -27,6 +27,7 @@ use React\Socket\Server as SocketServer;
 use React\Http\Server as HttpServer;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Response;
+use Zend\View\Model\ViewModel;
 
 /**
  * Basic application wrapper for a Zend Framework 2 Application.
@@ -96,16 +97,27 @@ class ApplicationWorker
             $reactRequest->on('data', function ($data) use ($application, $reactResponse) {
                 $application->servedRequests += 1;
 
-                $data     = json_decode($data, true);
+                $data           = json_decode($data, true);
                 /* @var $request Request */
-                $request  = Request::fromString($data['original_request_string']);
-                $response = new Response();
-                $mvcEvent = $application->application->getMvcEvent();
+                $request        = Request::fromString($data['original_request_string']);
+                $response       = new Response();
+                $mvcEvent       = $application->application->getMvcEvent();
+                $serviceManager = $application->application->getServiceManager();
+                /* @var $viewManager \Zend\Mvc\View\Http\ViewManager */
+                $viewManager    = $serviceManager->get('ViewManager');
+                $viewModel      = new ViewModel();
 
                 $request->setBasePath($data['original_base_path']);
                 $request->setBaseUrl($data['original_base_url']);
+                $mvcEvent->setRouter($serviceManager->get('Router'));
                 $mvcEvent->setRequest($request);
                 $mvcEvent->setResponse($response);
+                $mvcEvent->setApplication($application->application);
+                $mvcEvent->setTarget($application->application);
+                // the view manager registers the template only on bootstrap!
+                $viewModel->setTemplate($viewManager->getLayoutTemplate());
+                $mvcEvent->setViewModel($viewModel);
+                $application->application->setMvcEvent($mvcEvent);
 
                 /* @var $response \Zend\Http\Response */
                 $runStart = microtime(true);
