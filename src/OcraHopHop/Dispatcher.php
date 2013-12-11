@@ -60,7 +60,7 @@ class Dispatcher
         $request            = new Request();
 
         $request->setMethod(\Zend\Http\Request::METHOD_GET);
-        $request->setUri('http://127.0.0.1:1337');
+        $request->setUri($this->workerUri);
         $request->setContent(json_encode(array(
             'original_request_string' => $originalRequest->toString(),
             'original_base_url'       => $originalRequest->getBaseUrl(),
