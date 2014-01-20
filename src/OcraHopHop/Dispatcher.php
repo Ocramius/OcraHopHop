@@ -54,7 +54,7 @@ class Dispatcher
      */
     public function dispatch()
     {
-        $start = microtime(true);
+        //$start = microtime(true);
         $originalRequest    = new EnvironmentRequest();
         $client             = new Client();
         $request            = new Request();
