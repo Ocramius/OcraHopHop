@@ -54,7 +54,6 @@ class Dispatcher
      */
     public function dispatch()
     {
-        $start = microtime(true);
         $originalRequest    = new EnvironmentRequest();
         $client             = new Client();
         $request            = new Request();
@@ -71,7 +70,6 @@ class Dispatcher
         $originalResponseData = json_decode($response->getContent(), true);
 
         $httpResponse = EnvironmentResponse::fromString($originalResponseData['original_response_string']);
-        //die($originalResponseData['microtime'] . ' | ' . (microtime(true) - $start) . PHP_EOL);
 
         return $httpResponse;
     }
